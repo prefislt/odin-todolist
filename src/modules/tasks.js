@@ -20,8 +20,14 @@ const tasks = (() => {
 		dom.renderTodos();
 	}
 
+	function removeTask(id) {
+		projects.projectsList[0].tasks.splice(id, 1);
+		dom.renderTodos();
+	}
+
 	return {
 		addTask,
+		removeTask,
 	};
 })();
 
