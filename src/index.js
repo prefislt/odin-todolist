@@ -14,4 +14,4 @@ document.querySelector("#submitTodo").addEventListener("click", () => {
 });
 
 dom.renderProjects();
-dom.renderTodos();
+dom.renderTodos(-1);
