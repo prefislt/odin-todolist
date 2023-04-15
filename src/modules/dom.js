@@ -25,7 +25,6 @@ const dom = (() => {
                 <div id="projectsDom" class="flex flex-row justify-start gap-2 p-2"></div>
             </div>
             <div id="todos" class="flex flex-row justify-center w-full">
-                <div id="todolist" class="flex flex-col gap-2 p-2 w-full max-w-xl"></div>
             </div>
         </div>
 
@@ -47,12 +46,23 @@ const dom = (() => {
                 <button id="projectButton" class="btn btn-outline font-bold" data-index="${i}">${projects.projectsList[i].title}</button>
             `;
 		}
+
+		let buttons = document.querySelectorAll("#projectButton").length;
+
+		for (let i = 0; i < buttons; i++) {
+			document
+				.querySelectorAll("#projectButton")
+				[i].addEventListener("click", (e) => {
+					dom.renderTodos(e.currentTarget.dataset.index);
+				});
+		}
 	}
 
 	function renderTodos(index) {
-		document.querySelector("#todolist").innerHTML = ""; // clear todo list
-
 		if (index < 0) {
+			document.querySelector("#todos").innerHTML = /*html*/ `
+                <div id="todolist" class="flex flex-col gap-2 p-2 w-full max-w-xl" data-projectIndex="${index}"></div>
+            `;
 			for (let i = 0; i < projects.projectsList.length; i++) {
 				for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
 					document.querySelector("#todolist").innerHTML += /*html*/ `
@@ -77,6 +87,9 @@ const dom = (() => {
 				}
 			}
 		} else {
+			document.querySelector("#todos").innerHTML = /*html*/ `
+                <div id="todolist" class="flex flex-col gap-2 p-2 w-full max-w-xl" data-projectIndex="${index}"></div>
+             `;
 			for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
 				document.querySelector("#todolist").innerHTML += /*html*/ `
                         <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2">
@@ -101,7 +114,6 @@ const dom = (() => {
 		}
 
 		let buttons = document.querySelectorAll("#todoDelete").length;
-		console.log(document.querySelectorAll("#todoDelete"));
 
 		for (let i = 0; i < buttons; i++) {
 			document
