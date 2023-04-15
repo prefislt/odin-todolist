@@ -9,22 +9,46 @@ const dom = (() => {
 	const boilerplate = createHtmlElement(/*html*/ `
         <div id="content" class="flex flex-col justify-center items-center">
             <div id="header" class="flex justify-center items-center font-bold text-4xl my-4">To-Do List</div>
-            <div id="addTodo" class="flex flex-col justify-center items-center my-2 max-w-lg">
-                <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name">
-                <input class="input input-bordered w-full" id="inputDescription" type="text" placeholder="Description">
-                <input class="input input-bordered w-full" id="inputDate" type="date" placeholder="Select date">
-                <select class="select select-bordered w-full" id="inputPriority">
-                    <option disabled selected>Priority</option>
-                    <option>Low</option>
-                    <option>Medium</option>
-                    <option>High</option>
-                </select>
-                <button class="btn btn-primary" id="submitTodo">Add task</button>
+
+            <div id="popupButtons" class="flex flex-row gap-2">
+                <label for="addTaskPopup" class="btn">Add new task</label>
+                <label for="addProjectPopup" class="btn">Add new project</label>
             </div>
-            <div id="addProject" class="flex flex-col justify-center items-center my-2 max-w-lg">
-                <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name">
-                <button class="btn btn-primary" id="submitProject">Add project</button>
-            </div>
+
+
+            <input type="checkbox" id="addTaskPopup" class="modal-toggle" />
+            <label for="addTaskPopup" class="modal cursor-pointer">
+                <label class="modal-box relative">
+                    <div id="addTask" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
+                        <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name">
+                        <input class="input input-bordered w-full" id="inputDescription" type="text" placeholder="Description">
+                        <input class="input input-bordered w-full" id="inputDate" type="date" placeholder="Select date">
+                        <select class="select select-bordered w-full" id="inputPriority">
+                            <option disabled selected>Priority</option>
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option>High</option>
+                        </select>
+                        <button class="btn btn-primary" id="submitTask">Add task</button>
+                        <div class="alert alert-error shadow-lg">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span>Error! Just example, for now it's doing nothing. So don't worry :)</span>
+                            </div>
+                        </div>
+                    </div>
+                </label> 
+            </label>
+
+            <input type="checkbox" id="addProjectPopup" class="modal-toggle" />
+            <label for="addProjectPopup" class="modal cursor-pointer">
+                <label class="modal-box relative">
+                    <div id="addProject" class="flex flex-col justify-center items-center my-2 max-w-lg">
+                        <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name">
+                        <button class="btn btn-primary" id="submitProject">Add project</button>
+                    </div>
+                </label>
+            </label>
 
             <div id="projectsarea" class="flex justify-center items-center">
                 <div id="projectsDom" class="flex flex-row justify-start gap-2 p-2"></div>
@@ -69,7 +93,7 @@ const dom = (() => {
 			for (let i = 0; i < projects.projectsList.length; i++) {
 				for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
 					document.querySelector("#todolist").innerHTML += /*html*/ `
-                            <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2">
+                            <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="-1" data-taskindex="${l}">
                                 <div class="flex justify-center items-center w-6">
                                     <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="todoCheck" />
                                 </div>
@@ -95,7 +119,7 @@ const dom = (() => {
              `;
 			for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
 				document.querySelector("#todolist").innerHTML += /*html*/ `
-                        <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2">
+                        <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${index}" data-taskindex="${i}">
                             <div class="flex justify-center items-center w-6">
                                 <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="todoCheck" />
                             </div>
