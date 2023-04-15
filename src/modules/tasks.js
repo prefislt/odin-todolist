@@ -23,9 +23,24 @@ const tasks = (() => {
     dom.renderTasks(document.querySelector("#todolist").dataset.projectindex);
   }
 
+  function taskCheck(projectIndex, taskIndex) {
+    if (projects.projectsList[projectIndex].tasks[taskIndex].checked) {
+      projects.projectsList[projectIndex].tasks[taskIndex].checked = true;
+      document.querySelector(`[id="taskCheck"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).setAttribute('checked', 'checked');
+      document.querySelector(`[id="todoText"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.add('line-through');
+      document.querySelector(`[id="todoDesc"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.add('line-through');
+    } else {
+      projects.projectsList[projectIndex].tasks[taskIndex].checked = false;
+      document.querySelector(`[id="taskCheck"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).removeAttribute('checked', 'checked');
+      document.querySelector(`[id="todoText"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.remove('line-through');
+      document.querySelector(`[id="todoDesc"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.remove('line-through');
+    }
+  }
+
   return {
     addTask,
     removeTask,
+    taskCheck,
   };
 })();
 

@@ -29,7 +29,7 @@ const dom = (() => {
         </div>
     `;
 
-  // try horizontal scroll for project selector
+  // try horizontal scroll for project selector when it doesn't fit on screen ()
   const element = document.querySelector("#projectsarea");
 
   element.addEventListener("wheel", (event) => {
@@ -132,9 +132,9 @@ const dom = (() => {
     for (let i = 0; i < buttons; i++) {
       document
         .querySelectorAll("#projectButton")
-        [i].addEventListener("click", (e) => {
-          dom.renderTasks(e.currentTarget.dataset.index);
-        });
+      [i].addEventListener("click", (e) => {
+        dom.renderTasks(e.currentTarget.dataset.index);
+      });
     }
   }
 
@@ -148,11 +148,11 @@ const dom = (() => {
           document.querySelector("#todolist").innerHTML += /*html*/ `
                             <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="-1" data-taskindex="${l}">
                                 <div class="flex justify-center items-center w-6">
-                                    <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="todoCheck" />
+                                    <input id="taskCheck" class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" data-projectindex="${i}" data-taskindex="${l}"/>
                                 </div>
                                 <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content">
-                                    <span id="todoText" class="font-bold">${projects.projectsList[i].tasks[l].title}</span>
-                                    <span id="todoDesc" class="text-xs">${projects.projectsList[i].tasks[l].description}</span>
+                                    <span id="todoText" class="font-bold" data-projectindex="${i}" data-taskindex="${l}">${projects.projectsList[i].tasks[l].title}</span>
+                                    <span id="todoDesc" class="text-xs" data-projectindex="${i}" data-taskindex="${l}">${projects.projectsList[i].tasks[l].description}</span>
                                 </div>
                                 <div id="actionButtons" class="flex flex-row gap-2">
                                 <label for="popup" id="editTaskButton" class="btn" data-projectindex="${i}" data-taskindex="${l}">
@@ -164,6 +164,7 @@ const dom = (() => {
                                 </div>
                             </div>
                     `;
+          tasks.taskCheck(i, l);
         }
       }
     } else {
@@ -174,11 +175,11 @@ const dom = (() => {
         document.querySelector("#todolist").innerHTML += /*html*/ `
                         <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${index}" data-taskindex="${i}">
                             <div class="flex justify-center items-center w-6">
-                                <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="todoCheck" />
+                                <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="taskCheck" data-projectindex="${index}" data-taskindex="${i}"/>
                             </div>
                             <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content">
-                                <span id="todoText" class="font-bold">${projects.projectsList[index].tasks[i].title}</span>
-                                <span id="todoDesc" class="text-xs">${projects.projectsList[index].tasks[i].description}</span>
+                                <span id="todoText" class="font-bold" data-projectindex="${index}" data-taskindex="${i}">${projects.projectsList[index].tasks[i].title}</span>
+                                <span id="todoDesc" class="text-xs" data-projectindex="${index}" data-taskindex="${i}">${projects.projectsList[index].tasks[i].description}</span>
                             </div>
                             <div id="actionButtons" class="flex flex-row gap-2">
                                 <label for="popup" id="editTaskButton" class="btn" data-projectindex="${index}" data-taskindex="${i}">
@@ -190,7 +191,24 @@ const dom = (() => {
                             </div>
                         </div>
                 `;
+        tasks.taskCheck(index, i);
       }
+    }
+
+    // Add event listener to all checkmarks on tasks
+    let taskChecks = document.querySelectorAll("#taskCheck").length;
+    for (let i = 0; i < taskChecks; i++) {
+      document
+        .querySelectorAll("#taskCheck")
+      [i].addEventListener("click", (e) => {
+        let checked = projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked;
+        if (checked == true) {
+          projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked = false;
+        } else {
+          projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked = true;
+        }
+        tasks.taskCheck(e.currentTarget.dataset.projectindex, e.currentTarget.dataset.taskindex);
+      });
     }
 
     // Add event listener to all edit buttons on tasks
@@ -198,11 +216,11 @@ const dom = (() => {
     for (let i = 0; i < editButtons; i++) {
       document
         .querySelectorAll("#editTaskButton")
-        [i].addEventListener("click", (e) => {
-          const taskIndex = e.currentTarget.dataset.taskindex;
-          const projectIndex = e.currentTarget.dataset.projectindex;
-          dom.editTask(taskIndex, projectIndex);
-        });
+      [i].addEventListener("click", (e) => {
+        const taskIndex = e.currentTarget.dataset.taskindex;
+        const projectIndex = e.currentTarget.dataset.projectindex;
+        dom.editTask(taskIndex, projectIndex);
+      });
     }
 
     // Add event listener to all delete buttons on tasks
@@ -210,12 +228,12 @@ const dom = (() => {
     for (let i = 0; i < deleteButtons; i++) {
       document
         .querySelectorAll("#todoDelete")
-        [i].addEventListener("click", (e) => {
-          tasks.removeTask(
-            e.currentTarget.dataset.projectindex,
-            e.currentTarget.dataset.taskindex
-          );
-        });
+      [i].addEventListener("click", (e) => {
+        tasks.removeTask(
+          e.currentTarget.dataset.projectindex,
+          e.currentTarget.dataset.taskindex
+        );
+      });
     }
   }
 
