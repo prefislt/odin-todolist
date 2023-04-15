@@ -8,21 +8,19 @@ const tasks = (() => {
 			this.description = description;
 			this.date = date;
 			this.priority = priority;
-			this.projectId = 0;
-			this.taskId = 0;
 			this.checked = false;
 		}
 	}
 
-	function addTask(title, description, date, priority) {
+	function addTask(title, description, date, priority, projectIndex) {
 		const newTask = new CreateTask(title, description, date, priority);
-		projects.projectsList[0].tasks.push(newTask);
-		dom.renderTodos();
+		projects.projectsList[projectIndex].tasks.push(newTask);
+		dom.renderTasks(projectIndex);
 	}
 
-	function removeTask(id) {
-		projects.projectsList[0].tasks.splice(id, 1);
-		dom.renderTodos();
+	function removeTask(projectIndex, taskIndex) {
+		projects.projectsList[projectIndex].tasks.splice(taskIndex, 1);
+		dom.renderTasks(projectIndex);
 	}
 
 	return {

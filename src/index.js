@@ -4,14 +4,22 @@ import projects from "./modules/projects";
 import tasks from "./modules/tasks";
 import dom from "./modules/dom";
 
+dom.renderProjects();
+dom.renderTasks(1);
+
 document.querySelector("#submitTodo").addEventListener("click", () => {
 	let inputTaskName = document.querySelector("#inputTaskName").value;
 	let inputDescription = document.querySelector("#inputDescription").value;
 	let inputDate = document.querySelector("#inputDate").value;
 	let inputPriority = document.querySelector("#inputPriority").value;
 
-	tasks.addTask(inputTaskName, inputDescription, inputDate, inputPriority);
-});
+	const projectIndex = document.querySelector("#todolist").dataset.projectindex;
 
-dom.renderProjects();
-dom.renderTodos(-1);
+	tasks.addTask(
+		inputTaskName,
+		inputDescription,
+		inputDate,
+		inputPriority,
+		projectIndex
+	);
+});
