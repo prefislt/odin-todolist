@@ -8,10 +8,10 @@ dom.renderProjects();
 dom.renderTasks(1);
 
 document.querySelector("#submitTodo").addEventListener("click", () => {
-	let inputTaskName = document.querySelector("#inputTaskName").value;
-	let inputDescription = document.querySelector("#inputDescription").value;
-	let inputDate = document.querySelector("#inputDate").value;
-	let inputPriority = document.querySelector("#inputPriority").value;
+	const inputTaskName = document.querySelector("#inputTaskName").value;
+	const inputDescription = document.querySelector("#inputDescription").value;
+	const inputDate = document.querySelector("#inputDate").value;
+	const inputPriority = document.querySelector("#inputPriority").value;
 
 	const projectIndex = document.querySelector("#todolist").dataset.projectindex;
 
@@ -22,4 +22,10 @@ document.querySelector("#submitTodo").addEventListener("click", () => {
 		inputPriority,
 		projectIndex
 	);
+});
+
+document.querySelector("#submitProject").addEventListener("click", () => {
+	const inputProjectName = document.querySelector("#inputProjectName").value;
+	projects.addProject(inputProjectName);
+	dom.renderProjects();
 });

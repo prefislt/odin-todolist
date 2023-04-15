@@ -10,7 +10,7 @@ const dom = (() => {
         <div id="content" class="flex flex-col justify-center items-center">
             <div id="header" class="flex justify-center items-center font-bold text-4xl my-4">To-Do List</div>
             <div id="addTodo" class="flex flex-col justify-center items-center my-2 max-w-lg">
-                <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Name">
+                <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name">
                 <input class="input input-bordered w-full" id="inputDescription" type="text" placeholder="Description">
                 <input class="input input-bordered w-full" id="inputDate" type="date" placeholder="Select date">
                 <select class="select select-bordered w-full" id="inputPriority">
@@ -19,8 +19,13 @@ const dom = (() => {
                     <option>Medium</option>
                     <option>High</option>
                 </select>
-                <button class="btn btn-primary" id="submitTodo">OK</button>
+                <button class="btn btn-primary" id="submitTodo">Add task</button>
             </div>
+            <div id="addProject" class="flex flex-col justify-center items-center my-2 max-w-lg">
+                <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name">
+                <button class="btn btn-primary" id="submitProject">Add project</button>
+            </div>
+
             <div id="projectsarea" class="flex justify-center items-center">
                 <div id="projectsDom" class="flex flex-row justify-start gap-2 p-2"></div>
             </div>
