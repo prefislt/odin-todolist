@@ -7,24 +7,38 @@ const dom = (() => {
 
   document.querySelector("html").setAttribute("data-theme", "halloween");
   body.innerHTML = /*html*/ `
-        <div id="content" class="flex flex-col justify-center items-center">
-            <div id="header" class="flex justify-center items-center font-bold text-4xl my-4">To-Do List</div>
+        <div id="content" class="flex flex-col items-center w-full">
+            <div id="header" class="flex justify-center items-center font-bold text-4xl p-8 w-full">To-Do List</div>
 
-            <div id="popupButtons" class="flex flex-row gap-2">
-                <label for="popup" id="addNewTaskButton" class="btn">Add new task</label>
-                <label for="popup" id="addNewProjectButton" class="btn">Add new project</label>
+            <div id="popupButtons" class="flex flex-row gap-2 my-4">
+                <label for="popup" id="addNewTaskButton" class="btn btn-primary">Add new task</label>
+                <label for="popup" id="addNewProjectButton" class="btn btn-primary">Add new project</label>
             </div>
 
-            <div id="projectsarea" class="flex justify-center items-center">
-                <div id="projectsDom" class="flex flex-row justify-start gap-2 p-2"></div>
+            <div id="projectsAndTasks" class="flex flex-col w-full max-w-screen-lg px-6">
+                <div id="projectsarea" class="flex w-full overflow-auto scrollbar-hide ">
+                    <div id="projectsDom" class="flex flex-row gap-2 p-2"></div>
+                </div>
+                <div id="todos" class="flex flex-row justify-center w-full"></div>
             </div>
-            <div id="todos" class="flex flex-row justify-center w-full"></div>
+
 
             <div id="popupContent">
 
             </div>
         </div>
     `;
+
+  // try horizontal scroll for project selector
+  const element = document.querySelector("#projectsarea");
+
+  element.addEventListener("wheel", (event) => {
+    event.preventDefault();
+
+    element.scrollBy({
+      left: event.deltaY < 0 ? -30 : 30,
+    });
+  });
 
   // If "add new task" button is pressed change popup design to this
   document.querySelector("#addNewTaskButton").addEventListener("click", (e) => {
@@ -127,7 +141,7 @@ const dom = (() => {
   function renderTasks(index) {
     if (index < 0 || isNaN(index)) {
       document.querySelector("#todos").innerHTML = /*html*/ `
-                <div id="todolist" class="flex flex-col gap-2 p-2 w-full max-w-xl" data-projectindex="-1"></div>
+                <div id="todolist" class="flex flex-col gap-2 p-2 w-full" data-projectindex="-1"></div>
             `;
       for (let i = 0; i < projects.projectsList.length; i++) {
         for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
@@ -154,7 +168,7 @@ const dom = (() => {
       }
     } else {
       document.querySelector("#todos").innerHTML = /*html*/ `
-                <div id="todolist" class="flex flex-col gap-2 p-2 w-full max-w-xl" data-projectindex="${index}"></div>
+                <div id="todolist" class="flex flex-col gap-2 p-2 w-full" data-projectindex="${index}"></div>
              `;
       for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
         document.querySelector("#todolist").innerHTML += /*html*/ `
