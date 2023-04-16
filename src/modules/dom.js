@@ -6,20 +6,35 @@ const dom = (() => {
 
   document.querySelector("html").setAttribute("data-theme", "halloween");
   body.innerHTML = /*html*/ `
-        <div id="content" class="flex flex-col items-center w-full">
-            <div id="header" class="flex justify-center items-center font-bold text-4xl p-8 w-full">To-Do List</div>
+        <div id="content" class="flex flex-col items-center justify-between h-screen w-full">
+            <header class="flex flex-col">
+              <div class="flex justify-center items-center font-bold text-4xl p-8 w-full">To-Do List</div>
 
-            <div id="popupButtons" class="flex flex-row gap-2 mb-4">
-                <label for="popup" id="addNewTaskButton" class="btn btn-primary">Add new task</label>
-                <label for="popup" id="addNewProjectButton" class="btn btn-primary">Add new project</label>
-            </div>
-
-            <div id="projectsAndTasks" class="flex flex-col w-full max-w-screen-lg px-6">
+              <div id="popupButtons" class="flex gap-2 mb-4">
+                  <label for="popup" id="addNewTaskButton" class="btn btn-primary">Add new task</label>
+                  <label for="popup" id="addNewProjectButton" class="btn btn-primary">Add new project</label>
+              </div>
+            </header>
+            <main class="flex flex-grow w-screen justify-center pb-4 px-4">
+              <div id="projectsAndTasks" class="flex flex-col flex-grow min-w-0 max-w-screen-lg">
                 <div id="projectsarea" class="overflow-auto scrollbar-hide">
-                    <div id="projectsDom" class="flex flex-row gap-2 mb-4"></div>
+                    <div id="projectsDom" class="flex flex-row gap-2 mb-4 min-w-fit"></div>
                 </div>
-                <div id="todos" class="flex flex-col justify-center w-full"></div>
-            </div>
+                <div id="todos" class="flex flex-col justify-center"></div>
+              </div>
+            </main>
+            <footer class="footer items-center p-4 bg-neutral text-neutral-content">
+              <div class="items-center grid-flow-col">
+                <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" class="fill-current"><path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path></svg> 
+                <p>To-Do List 🚀 2023</p>
+              </div> 
+              <div class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+                <a href="https://twitter.com/prefislt"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+                </a> 
+                <a href="https://github.com/prefislt">
+                  <svg class="fill-base-content stroke-base-content w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="0.00024000000000000003"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M20.9992 5.95846C21.0087 6.565 20.9333 7.32649 20.8658 7.8807C20.8395 8.09686 20.8037 8.27676 20.7653 8.42453C21.6227 10.01 22 11.9174 22 14C22 16.4684 20.8127 18.501 18.9638 19.8871C17.1319 21.2605 14.6606 22 12 22C9.33939 22 6.86809 21.2605 5.0362 19.8871C3.18727 18.501 2 16.4684 2 14C2 11.9174 2.37732 10.01 3.23472 8.42452C3.19631 8.27676 3.16055 8.09685 3.13422 7.8807C3.06673 7.32649 2.99133 6.565 3.00081 5.95846C3.01149 5.27506 3.10082 4.5917 3.19988 3.91379C3.24569 3.60028 3.31843 3.30547 3.65883 3.11917C4.00655 2.92886 4.37274 2.99981 4.73398 3.1021C5.95247 3.44713 7.09487 3.93108 8.16803 4.51287C9.2995 4.17287 10.5783 4 12 4C13.4217 4 14.7005 4.17287 15.832 4.51287C16.9051 3.93108 18.0475 3.44713 19.266 3.1021C19.6273 2.99981 19.9935 2.92886 20.3412 3.11917C20.6816 3.30547 20.7543 3.60028 20.8001 3.91379C20.8992 4.5917 20.9885 5.27506 20.9992 5.95846ZM20 14C20 12.3128 19.6122 10 17.5 10C16.5478 10 15.6474 10.2502 14.7474 10.5004C13.8482 10.7502 12.9495 11 12 11C11.0505 11 10.1518 10.7502 9.25263 10.5004C8.35261 10.2502 7.45216 10 6.5 10C4.39379 10 4 12.3197 4 14C4 15.7636 4.82745 17.231 6.23588 18.2869C7.66135 19.3556 9.69005 20 12 20C14.3099 20 16.3386 19.3555 17.7641 18.2869C19.1726 17.231 20 15.7636 20 14ZM10 14.5C10 15.8807 9.32843 17 8.5 17C7.67157 17 7 15.8807 7 14.5C7 13.1193 7.67157 12 8.5 12C9.32843 12 10 13.1193 10 14.5ZM15.5 17C16.3284 17 17 15.8807 17 14.5C17 13.1193 16.3284 12 15.5 12C14.6716 12 14 13.1193 14 14.5C14 15.8807 14.6716 17 15.5 17Z"></path> </g></svg></a>
+              </div>
+            </footer>
             <div id="popupContent"></div>
         </div>
     `;
@@ -139,7 +154,7 @@ const dom = (() => {
   function renderTasks(index) {
     if (index < 0 || isNaN(index)) {
       document.querySelector("#todos").innerHTML = /*html*/ `
-                <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="-1"></div>
+                <div id="todolist" class="flex flex-col gap-2 w-full flex-grow" data-projectindex="-1"></div>
             `;
       for (let i = 0; i < projects.projectsList.length; i++) {
         for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
