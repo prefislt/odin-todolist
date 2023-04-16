@@ -16,8 +16,8 @@ const dom = (() => {
             </div>
 
             <div id="projectsAndTasks" class="flex flex-col w-full max-w-screen-lg px-6">
-                <div id="projectsarea" class="flex w-full overflow-auto scrollbar-hide ">
-                    <div id="projectsDom" class="flex flex-row gap-2 p-2"></div>
+                <div id="projectsarea" class="overflow-auto scrollbar-hide">
+                    <div id="projectsDom" class="flex flex-row gap-2 mb-4"></div>
                 </div>
                 <div id="todos" class="flex flex-row justify-center w-full"></div>
             </div>
@@ -121,7 +121,11 @@ const dom = (() => {
 
     for (let i = 0; i < projects.projectsList.length; i++) {
       document.querySelector("#projectsDom").innerHTML += /*html*/ `
-                <button id="projectButton" class="btn btn-outline font-bold" data-index="${i}">${projects.projectsList[i].title}</button>
+                <button id="projectButton" class="btn btn-outline font-bold" data-index="${i}">
+                  <div class="">${i}</div>
+                  <div class="divider divider-horizontal m-2"></div>
+                  <div>${projects.projectsList[i].title}</div>
+                </button>
             `;
     }
 
@@ -139,7 +143,7 @@ const dom = (() => {
   function renderTasks(index) {
     if (index < 0 || isNaN(index)) {
       document.querySelector("#todos").innerHTML = /*html*/ `
-                <div id="todolist" class="flex flex-col gap-2 p-2 w-full" data-projectindex="-1"></div>
+                <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="-1"></div>
             `;
       for (let i = 0; i < projects.projectsList.length; i++) {
         for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
