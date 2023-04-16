@@ -164,9 +164,9 @@ const dom = (() => {
           <label for="popup" id="editTaskButton" class="btn" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g></svg>
           </label>
-          <button class="btn" id="todoDelete" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+          <label for="popup" class="btn" id="todoDelete" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-          </button>
+          </label>
           </div>
         </div>
     `;
@@ -243,9 +243,7 @@ const dom = (() => {
     // Add event listener to all edit buttons on tasks
     let editButtons = document.querySelectorAll("#editTaskButton").length;
     for (let i = 0; i < editButtons; i++) {
-      document
-        .querySelectorAll("#editTaskButton")
-      [i].addEventListener("click", (e) => {
+      document.querySelectorAll("#editTaskButton")[i].addEventListener("click", (e) => {
         const taskIndex = e.currentTarget.dataset.taskindex;
         const projectIndex = e.currentTarget.dataset.projectindex;
         dom.editTask(taskIndex, projectIndex);
@@ -255,13 +253,24 @@ const dom = (() => {
     // Add event listener to all delete buttons on tasks
     let deleteButtons = document.querySelectorAll("#todoDelete").length;
     for (let i = 0; i < deleteButtons; i++) {
-      document
-        .querySelectorAll("#todoDelete")
-      [i].addEventListener("click", (e) => {
-        tasks.removeTask(
-          e.currentTarget.dataset.projectindex,
-          e.currentTarget.dataset.taskindex
-        );
+      document.querySelectorAll("#todoDelete")[i].addEventListener("click", (e) => {
+
+        document.querySelector("#popupContent").innerHTML = /*html*/ `
+                      <input type="checkbox" id="popup" class="modal-toggle" />
+                      <label for="popup" class="modal cursor-pointer">
+                          <label class="modal-box relative">
+                              <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                              <span>DELETE THIS TASK?</span>
+                              <div id="deleteTask" class="flex flex-row gap-2 justify-center items-center my-2 max-w-lg">
+                                  <label for="popup" class="btn btn-success" id="deleteTaskNo">NO</label>
+                                  <label for="popup" class="btn btn-error" id="deleteTaskYes" data-projectindex="${e.currentTarget.dataset.projectindex}" data-taskindex="${e.currentTarget.dataset.taskindex}">YES</label>
+                              </div>
+                          </label>
+                      </label>
+                  `;
+        document.querySelector("#deleteTaskYes").addEventListener("click", (e) => {
+          tasks.removeTask(e.currentTarget.dataset.projectindex, e.currentTarget.dataset.taskindex);
+        });
       });
     }
   }
