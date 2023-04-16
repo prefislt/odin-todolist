@@ -1,4 +1,3 @@
-import { createHtmlElement } from "./functions";
 import projects from "./projects";
 import tasks from "./tasks";
 
@@ -10,7 +9,7 @@ const dom = (() => {
         <div id="content" class="flex flex-col items-center w-full">
             <div id="header" class="flex justify-center items-center font-bold text-4xl p-8 w-full">To-Do List</div>
 
-            <div id="popupButtons" class="flex flex-row gap-2 my-4">
+            <div id="popupButtons" class="flex flex-row gap-2 mb-4">
                 <label for="popup" id="addNewTaskButton" class="btn btn-primary">Add new task</label>
                 <label for="popup" id="addNewProjectButton" class="btn btn-primary">Add new project</label>
             </div>
@@ -29,13 +28,13 @@ const dom = (() => {
         </div>
     `;
 
-  // try horizontal scroll for project selector when it doesn't fit on screen ()
-  const element = document.querySelector("#projectsarea");
+  // try horizontal scroll for project selector when it doesn't fit on screen
+  const projectsarea = document.querySelector("#projectsarea");
 
-  element.addEventListener("wheel", (event) => {
+  projectsarea.addEventListener("wheel", (event) => {
     event.preventDefault();
 
-    element.scrollBy({
+    projectsarea.scrollBy({
       left: event.deltaY < 0 ? -30 : 30,
     });
   });
@@ -171,7 +170,7 @@ const dom = (() => {
       }
     } else {
       document.querySelector("#todos").innerHTML = /*html*/ `
-                <div id="todolist" class="flex flex-col gap-2 p-2 w-full" data-projectindex="${index}"></div>
+                <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
              `;
       if (projects.projectsList[index].tasks.length > 0) {
         for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
