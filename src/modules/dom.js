@@ -105,7 +105,6 @@ const dom = (() => {
       const inputProjectName =
         document.querySelector("#inputProjectName").value;
       projects.addProject(inputProjectName);
-      dom.renderProjects();
     });
   });
 
@@ -192,8 +191,6 @@ const dom = (() => {
 
         document.querySelector("#deleteProjectYes").addEventListener("click", (e) => {
           projects.removeProject(e.currentTarget.dataset.projectindex);
-          dom.renderTasks(e.currentTarget.dataset.projectindex - 1);
-          dom.renderProjects();
         });
       });
 
@@ -327,6 +324,7 @@ const dom = (() => {
         checked: hasChecked,
       };
 
+      projects.saveProjects();
       dom.renderTasks(document.querySelector("#todolist").dataset.projectindex);
     });
   }

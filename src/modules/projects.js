@@ -1,3 +1,5 @@
+import dom from "./dom";
+
 const projects = (() => {
   let projectsList = [];
 
@@ -54,19 +56,30 @@ const projects = (() => {
     }
   }
 
+  function saveProjects() {
+    const projectsStringify = JSON.stringify(projectsList);
+    localStorage.setItem("projects", projectsStringify);
+  }
+
   function addProject(title) {
     const project = new Project(title);
     projectsList.push(project);
+    projects.saveProjects();
+    dom.renderProjects();
   }
 
   function removeProject(projectIndex) {
     projects.projectsList.splice(projectIndex, 1);
+    dom.renderTasks(projectIndex - 1);
+    projects.saveProjects();
+    dom.renderProjects();
   }
 
   return {
     projectsList,
     addProject,
     removeProject,
+    saveProjects,
   };
 })();
 
