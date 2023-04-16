@@ -90,10 +90,8 @@ const dom = (() => {
   });
 
   // If "add new project" button is pressed change popup design to this
-  document
-    .querySelector("#addNewProjectButton")
-    .addEventListener("click", (e) => {
-      document.querySelector("#popupContent").innerHTML = /*html*/ `
+  document.querySelector("#addNewProjectButton").addEventListener("click", (e) => {
+    document.querySelector("#popupContent").innerHTML = /*html*/ `
                 <input type="checkbox" id="popup" class="modal-toggle" />
                 <label for="popup" class="modal cursor-pointer">
                     <label class="modal-box relative">
@@ -106,13 +104,13 @@ const dom = (() => {
                 </label>
             `;
 
-      document.querySelector("#submitProject").addEventListener("click", () => {
-        const inputProjectName =
-          document.querySelector("#inputProjectName").value;
-        projects.addProject(inputProjectName);
-        dom.renderProjects();
-      });
+    document.querySelector("#submitProject").addEventListener("click", () => {
+      const inputProjectName =
+        document.querySelector("#inputProjectName").value;
+      projects.addProject(inputProjectName);
+      dom.renderProjects();
     });
+  });
 
   function renderProjects() {
     document.querySelector("#projectsDom").innerHTML = ""; // clear projects list
@@ -171,27 +169,31 @@ const dom = (() => {
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 p-2 w-full" data-projectindex="${index}"></div>
              `;
-      for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
-        document.querySelector("#todolist").innerHTML += /*html*/ `
-                        <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${index}" data-taskindex="${i}">
-                            <div class="flex justify-center items-center w-6">
-                                <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="taskCheck" data-projectindex="${index}" data-taskindex="${i}"/>
-                            </div>
-                            <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content">
-                                <span id="todoText" class="font-bold" data-projectindex="${index}" data-taskindex="${i}">${projects.projectsList[index].tasks[i].title}</span>
-                                <span id="todoDesc" class="text-xs" data-projectindex="${index}" data-taskindex="${i}">${projects.projectsList[index].tasks[i].description}</span>
-                            </div>
-                            <div id="actionButtons" class="flex flex-row gap-2">
-                                <label for="popup" id="editTaskButton" class="btn" data-projectindex="${index}" data-taskindex="${i}">
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g></svg>
-                                </label>
-                                <button class="btn" id="todoDelete" data-projectindex="${index}" data-taskindex="${i}">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                                </button>
-                            </div>
-                        </div>
-                `;
-        tasks.taskCheck(index, i);
+      if (projects.projectsList[index].tasks.length > 0) {
+        for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
+          document.querySelector("#todolist").innerHTML += /*html*/ `
+                          <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${index}" data-taskindex="${i}">
+                              <div class="flex justify-center items-center w-6">
+                                  <input class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" id="taskCheck" data-projectindex="${index}" data-taskindex="${i}"/>
+                              </div>
+                              <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content">
+                                  <span id="todoText" class="font-bold" data-projectindex="${index}" data-taskindex="${i}">${projects.projectsList[index].tasks[i].title}</span>
+                                  <span id="todoDesc" class="text-xs" data-projectindex="${index}" data-taskindex="${i}">${projects.projectsList[index].tasks[i].description}</span>
+                              </div>
+                              <div id="actionButtons" class="flex flex-row gap-2">
+                                  <label for="popup" id="editTaskButton" class="btn" data-projectindex="${index}" data-taskindex="${i}">
+                                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g></svg>
+                                  </label>
+                                  <button class="btn" id="todoDelete" data-projectindex="${index}" data-taskindex="${i}">
+                                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                  </button>
+                              </div>
+                          </div>
+                  `;
+          tasks.taskCheck(index, i);
+        }
+      } else {
+        document.querySelector("#todolist").innerHTML += /*html*/ `No tasks :/`;
       }
     }
 
@@ -265,6 +267,20 @@ const dom = (() => {
                 </label>
         `;
 
+    // Show correct priority
+    switch (projects.projectsList[projectIndex].tasks[taskIndex].priority) {
+      case "Low":
+        document.querySelector("#inputPriorityEdit").options[1].selected = true;
+        break;
+      case "Medium":
+        document.querySelector("#inputPriorityEdit").options[2].selected = true;
+        break;
+      case "High":
+        document.querySelector("#inputPriorityEdit").options[3].selected = true;
+        break;
+    }
+
+    // When submit (edit task) button pressed
     document.querySelector("#submitTaskEdit").addEventListener("click", () => {
       const inputTaskName = document.querySelector("#inputTaskNameEdit").value;
       const inputDescription = document.querySelector(
@@ -272,13 +288,15 @@ const dom = (() => {
       ).value;
       const inputDate = document.querySelector("#inputDateEdit").value;
       const inputPriority = document.querySelector("#inputPriorityEdit").value;
+      const hasChecked = document.querySelector(`[id="taskCheck"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).hasAttribute("checked");
+
 
       projects.projectsList[projectIndex].tasks[taskIndex] = {
         title: inputTaskName,
         description: inputDescription,
         date: inputDate,
         priority: inputPriority,
-        checked: false,
+        checked: hasChecked,
       };
 
       dom.renderTasks(document.querySelector("#todolist").dataset.projectindex);
