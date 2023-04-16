@@ -18,13 +18,9 @@ const dom = (() => {
                 <div id="projectsarea" class="overflow-auto scrollbar-hide">
                     <div id="projectsDom" class="flex flex-row gap-2 mb-4"></div>
                 </div>
-                <div id="todos" class="flex flex-row justify-center w-full"></div>
+                <div id="todos" class="flex flex-col justify-center w-full"></div>
             </div>
-
-
-            <div id="popupContent">
-
-            </div>
+            <div id="popupContent"></div>
         </div>
     `;
 
@@ -45,6 +41,7 @@ const dom = (() => {
             <input type="checkbox" id="popup" class="modal-toggle" />
                 <label for="popup" class="modal cursor-pointer">
                     <label class="modal-box relative">
+                        <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                         <span>ADD NEW TASK</span>
                         <div id="addTask" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
                             <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name">
@@ -94,6 +91,7 @@ const dom = (() => {
                 <input type="checkbox" id="popup" class="modal-toggle" />
                 <label for="popup" class="modal cursor-pointer">
                     <label class="modal-box relative">
+                        <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                         <span>ADD NEW PROJECT</span>
                         <div id="addProject" class="flex flex-col gap-2 justify-center items-center my-2 max-w-lg">
                             <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name">
@@ -171,7 +169,34 @@ const dom = (() => {
     } else {
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
+                <div id="footerButton" class="flex flex-row mt-4">
+                  <label for="popup" id="deleteProjectButton" class="btn btn-outline btn-error" data-projectindex="${index}">Delete project</label>
+                </div>
              `;
+
+      // If "delete project" button is pressed change popup design to this
+      document.querySelector("#deleteProjectButton").addEventListener("click", (e) => {
+        document.querySelector("#popupContent").innerHTML = /*html*/ `
+                      <input type="checkbox" id="popup" class="modal-toggle" />
+                      <label for="popup" class="modal cursor-pointer">
+                          <label class="modal-box relative">
+                              <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                              <span>DELETE "<b>${projects.projectsList[e.currentTarget.dataset.projectindex].title}</b>" PROJECT WITH ALL TASKS IN IT?</span>
+                              <div id="deleteProject" class="flex flex-row gap-2 justify-center items-center my-2 max-w-lg">
+                                  <label for="popup" class="btn btn-success" id="deleteProjectNo">NO</label>
+                                  <label for="popup" class="btn btn-error" id="deleteProjectYes" data-projectindex="${e.currentTarget.dataset.projectindex}">YES</label>
+                              </div>
+                          </label>
+                      </label>
+                  `;
+
+        document.querySelector("#deleteProjectYes").addEventListener("click", (e) => {
+          projects.removeProject(e.currentTarget.dataset.projectindex);
+          dom.renderTasks(e.currentTarget.dataset.projectindex - 1);
+          dom.renderProjects();
+        });
+      });
+
       if (projects.projectsList[index].tasks.length > 0) {
         for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
           document.querySelector("#todolist").innerHTML += /*html*/ `

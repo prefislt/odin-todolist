@@ -59,9 +59,14 @@ const projects = (() => {
     projectsList.push(project);
   }
 
+  function removeProject(projectIndex) {
+    projects.projectsList.splice(projectIndex, 1);
+  }
+
   return {
     projectsList,
     addProject,
+    removeProject,
   };
 })();
 
