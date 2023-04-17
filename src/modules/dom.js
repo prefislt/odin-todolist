@@ -87,8 +87,7 @@ const dom = (() => {
       const inputDate = document.querySelector("#inputDate").value;
       const inputPriority = document.querySelector("#inputPriority").value;
 
-      const projectIndex =
-        document.querySelector("#todolist").dataset.projectindex;
+      const projectIndex = document.querySelector("#todolist").dataset.projectindex;
 
       tasks.addTask(
         inputTaskName,
@@ -188,7 +187,8 @@ const dom = (() => {
     } else {
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
-                <div id="footerButton" class="flex flex-row mt-4">
+                <div id="footerButton" class="flex flex-row mt-4 gap-2">
+                  <label for="popup" id="editProjectButton" class="btn btn-outline btn-warning" data-projectindex="${index}">Edit project</label>
                   <label for="popup" id="deleteProjectButton" class="btn btn-outline btn-error" data-projectindex="${index}">Delete project</label>
                 </div>
              `;
@@ -211,6 +211,31 @@ const dom = (() => {
 
         document.querySelector("#deleteProjectYes").addEventListener("click", (e) => {
           projects.removeProject(e.currentTarget.dataset.projectindex);
+        });
+      });
+
+      // If "edit project" button is pressed change popup design to this
+      document.querySelector("#editProjectButton").addEventListener("click", (e) => {
+        document.querySelector("#popupContent").innerHTML = /*html*/ `
+          <input type="checkbox" id="popup" class="modal-toggle" />
+          <label for="popup" class="modal cursor-pointer">
+              <label class="modal-box relative">
+                  <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                  <span>Change project name</span>
+                  <div id="addProject" class="flex flex-col gap-2 justify-center items-center my-2 max-w-lg">
+                      <input class="input input-bordered w-full" id="editProjectName" type="text" placeholder="Project name" value="${projects.projectsList[e.currentTarget.dataset.projectindex].title}">
+                      <button class="btn btn-primary" id="editProject" data-projectindex="${e.currentTarget.dataset.projectindex}">Confirm</button>
+                  </div>
+              </label>
+          </label>
+        `;
+
+        document.querySelector("#editProject").addEventListener("click", (e) => {
+          const editProjectName = document.querySelector("#editProjectName").value;
+          const editProjectIndex = e.currentTarget.dataset.projectindex;
+          projects.editProjectName(editProjectIndex, editProjectName);
+          dom.renderProjects();
+          document.querySelector(`[id="projectButton"][data-index="${document.querySelector('#todolist').dataset.projectindex}"]`).classList.add('underline', 'underline-offset-4');
         });
       });
 

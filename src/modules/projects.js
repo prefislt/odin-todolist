@@ -75,11 +75,18 @@ const projects = (() => {
     dom.renderProjects();
   }
 
+  function editProjectName(projectIndex, name) {
+    console.log(projectIndex);
+    projectsList[projectIndex].title = name;
+    projects.saveProjects();
+  }
+
   return {
     projectsList,
     addProject,
     removeProject,
     saveProjects,
+    editProjectName,
   };
 })();
 
