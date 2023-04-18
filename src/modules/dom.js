@@ -172,26 +172,53 @@ const dom = (() => {
     return dom;
   }
 
+  function noTasks(text) {
+    const noTasksDOM = /*html*/`
+
+    <div class="grid h-20 card bg-base-300 rounded-box place-items-center">${text}</div>
+    
+    `;
+
+    return noTasksDOM;
+  }
+
   function renderTasks(index) {
 
     if (index < 0 || isNaN(index)) {
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 w-full flex-grow" data-projectindex="-1"></div>
-            `;
+      `;
+
+      let taskCount = 0;
+      let projectsCount = 0;
+
       for (let i = 0; i < projects.projectsList.length; i++) {
+        projectsCount++;
         for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
+          taskCount++;
           document.querySelector("#todolist").innerHTML += dom.generateTask(i, l);
           tasks.taskCheck(i, l);
         }
       }
-    } else {
+
+      if (taskCount === 0) {
+        document.querySelector("#todolist").innerHTML = dom.noTasks("All projects are empty.");
+      }
+
+      if (projectsCount === 0) {
+        document.querySelector("#todolist").innerHTML = dom.noTasks("There are no projects, please add one.");
+      }
+
+    }
+
+    if (index >= 0) {
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
                 <div id="footerButton" class="flex flex-row mt-4 gap-2">
                   <label for="popup" id="editProjectButton" class="btn btn-outline btn-warning" data-projectindex="${index}">Edit project</label>
                   <label for="popup" id="deleteProjectButton" class="btn btn-outline btn-error" data-projectindex="${index}">Delete project</label>
                 </div>
-             `;
+      `;
 
       // If "delete project" button is pressed change popup design to this
       document.querySelector("#deleteProjectButton").addEventListener("click", (e) => {
@@ -245,7 +272,7 @@ const dom = (() => {
           tasks.taskCheck(index, i);
         }
       } else {
-        document.querySelector("#todolist").innerHTML += /*html*/ `No tasks :/`;
+        document.querySelector("#todolist").innerHTML = dom.noTasks("This project has no tasks.");
       }
     }
 
@@ -370,6 +397,7 @@ const dom = (() => {
     renderTasks,
     editTask,
     generateTask,
+    noTasks,
   };
 })();
 

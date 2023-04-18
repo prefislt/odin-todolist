@@ -76,7 +76,6 @@ const projects = (() => {
   }
 
   function editProjectName(projectIndex, name) {
-    console.log(projectIndex);
     projectsList[projectIndex].title = name;
     projects.saveProjects();
   }
