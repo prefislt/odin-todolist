@@ -7,12 +7,17 @@ const dom = (() => {
   document.querySelector("html").setAttribute("data-theme", "halloween");
   body.innerHTML = /*html*/ `
         <div id="content" class="flex flex-col items-center justify-between h-screen w-full">
-            <header class="flex flex-col">
-              <div class="flex justify-center items-center font-bold text-4xl p-8 w-full">To-Do List</div>
-
-              <div id="popupButtons" class="flex gap-2 mb-4">
-                  <label for="popup" id="addNewTaskButton" class="btn btn-primary">Add new task</label>
-                  <label for="popup" id="addNewProjectButton" class="btn btn-primary">Add new project</label>
+            <header class="flex w-screen justify-center p-4 mt-2">
+              <div class="navbar flex-col sm:flex-row bg-base-300 rounded-box max-w-screen-lg">
+                <div class="flex-1 px-2 lg:flex-none">
+                  <a class="text-lg font-bold">To-Do List</a>
+                </div> 
+                <div class="flex justify-end flex-1 px-2">
+                  <div class="flex items-stretch">
+                    <label for="popup" id="addNewTaskButton" class="btn btn-ghost rounded-btn">Add new task</label>
+                    <label for="popup" id="addNewProjectButton" class="btn btn-ghost rounded-btn">Add new project</label>
+                  </div>
+                </div>
               </div>
             </header>
             <main class="flex flex-grow w-screen justify-center pb-4 px-4">
