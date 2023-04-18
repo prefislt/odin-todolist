@@ -158,6 +158,10 @@ const dom = (() => {
           <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content">
               <span id="todoText" class="font-bold" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].title}</span>
               <span id="todoDesc" class="text-xs" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].description}</span>
+              <div id="smallInfo">
+                <div id="todoDate" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">📆 ${projects.projectsList[projectIndex].tasks[taskIndex].date}</div>
+                <div id="todoPriority" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">⚠️ ${projects.projectsList[projectIndex].tasks[taskIndex].priority}</div>
+              </div>
           </div>
           <div id="actionButtons" class="flex flex-row gap-2">
           <label for="popup" id="editTaskButton" class="btn" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
