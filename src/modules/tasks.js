@@ -30,14 +30,12 @@ const tasks = (() => {
       projects.projectsList[projectIndex].tasks[taskIndex].checked = true;
       projects.saveProjects();
       document.querySelector(`[id="taskCheck"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).setAttribute('checked', 'checked');
-      document.querySelector(`[id="todoText"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.add('line-through');
-      document.querySelector(`[id="todoDesc"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.add('line-through');
+      document.querySelector(`[id="todoTask"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.add('opacity-50', 'blur-[1px]');
     } else {
       projects.projectsList[projectIndex].tasks[taskIndex].checked = false;
       projects.saveProjects();
       document.querySelector(`[id="taskCheck"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).removeAttribute('checked', 'checked');
-      document.querySelector(`[id="todoText"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.remove('line-through');
-      document.querySelector(`[id="todoDesc"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.remove('line-through');
+      document.querySelector(`[id="todoTask"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).classList.remove('opacity-50', 'blur-[1px]');
     }
   }
 

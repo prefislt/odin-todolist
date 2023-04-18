@@ -151,11 +151,11 @@ const dom = (() => {
 
   function generateTask(projectIndex, taskIndex) {
     const dom = /*html*/ `
-        <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2">
+        <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
           <div class="flex justify-center items-center w-6">
               <input id="taskCheck" class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}"/>
           </div>
-          <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content">
+          <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
               <span id="todoText" class="font-bold" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].title}</span>
               <span id="todoDesc" class="text-xs" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].description}</span>
               <div id="smallInfo">
