@@ -39,10 +39,74 @@ const tasks = (() => {
     }
   }
 
+  function tasksSort(sortBy, tasks) {
+    switch (sortBy) {
+      case "none":
+        break;
+      case "datefromnewest":
+        tasks.sort(function compare(a, b) {
+          let dateA = new Date(a.date);
+          let dateB = new Date(b.date);
+          return dateB - dateA;
+        });
+        break;
+      case "datefromoldest":
+        tasks.sort(function compare(a, b) {
+          let dateA = new Date(a.date);
+          let dateB = new Date(b.date);
+          return dateA - dateB;
+        });
+        break;
+      case "priorityfromlowest":
+        for (let i = 0; i < tasks.length; i++) {
+          switch (tasks[i].priority) {
+            case "Low":
+              tasks[i].priorityId = 1;
+              break;
+            case "Medium":
+              tasks[i].priorityId = 2;
+              break;
+            case "High":
+              tasks[i].priorityId = 3;
+              break;
+          }
+        }
+        tasks.sort(function compare(a, b) {
+          let priorityA = a.priorityId;
+          let priorityB = b.priorityId;
+          return priorityA - priorityB;
+        });
+        break;
+      case "priorityfromhighest":
+        for (let i = 0; i < tasks.length; i++) {
+          switch (tasks[i].priority) {
+            case "Low":
+              tasks[i].priorityId = 1;
+              break;
+            case "Medium":
+              tasks[i].priorityId = 2;
+              break;
+            case "High":
+              tasks[i].priorityId = 3;
+              break;
+          }
+        }
+        tasks.sort(function compare(a, b) {
+          let priorityA = a.priorityId;
+          let priorityB = b.priorityId;
+          return priorityB - priorityA;
+        });
+        break;
+    }
+
+    return tasks;
+  }
+
   return {
     addTask,
     removeTask,
     taskCheck,
+    tasksSort,
   };
 })();
 

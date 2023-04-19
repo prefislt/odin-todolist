@@ -20,8 +20,17 @@ const dom = (() => {
                 </div>
               </div>
             </header>
-            <main class="flex flex-grow w-screen justify-center pb-4 px-4">
-              <div id="projectsAndTasks" class="flex flex-col flex-grow min-w-0 max-w-screen-lg">
+            <main class="flex flex-grow flex-col w-screen items-center pb-4 px-4">
+              <div id="sortButtons" class="flex flex-row w-full min-w-0 max-w-screen-lg mb-2">
+                <select id="sortBy" class="select select-bordered select-xs w-full max-w-xs">
+                      <option value="none" selected>No sorting</option>
+                      <option value="datefromoldest">Date (from sooner to later)</option>
+                      <option value="datefromnewest">Date (from later to sooner)</option>
+                      <option value="priorityfromlowest">Priority (from lower to higher)</option>
+                      <option value="priorityfromhighest">Priority (from higher to lower)</option>
+                </select>
+              </div>
+              <div id="projectsAndTasks" class="flex flex-col w-full flex-grow min-w-0 max-w-screen-lg">
                 <div id="projectsarea" class="overflow-auto scrollbar-hide">
                     <div id="projectsDom" class="flex flex-row gap-2 mb-4 min-w-fit"></div>
                 </div>
@@ -146,6 +155,12 @@ const dom = (() => {
     });
   });
 
+  // If "sort by date" button is pressed
+  document.querySelector("#sortBy").addEventListener("change", (e) => {
+    const projectIndex = document.querySelector("#todolist").dataset.projectindex;
+    dom.renderTasks(projectIndex);
+  });
+
   function renderProjects() {
     document.querySelector("#projectsDom").innerHTML = ""; // clear projects list
 
@@ -210,26 +225,50 @@ const dom = (() => {
     return noTasksDOM;
   }
 
+  function renderTasksArray(tasksArray) {
+    document.querySelector("#todolist").innerHTML = "";
+    for (let i = 0; i < tasksArray.length; i++) {
+      document.querySelector("#todolist").innerHTML += dom.generateTask(tasksArray[i].projectIndex, tasksArray[i].taskIndex);
+      tasks.taskCheck(tasksArray[i].projectIndex, tasksArray[i].taskIndex);
+    }
+  }
+
   function renderTasks(index) {
 
-    if (index < 0 || isNaN(index)) {
+    if (index < 0 || isNaN(index)) { // RENDER ALL TASKS
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 w-full flex-grow" data-projectindex="-1"></div>
       `;
 
-      let taskCount = 0;
+      let tasksArray = [];
+      let sortedTasks;
+      let sortBy = "none";
+      let tasksCount = 0;
       let projectsCount = 0;
 
+      // Push all tasks to a single object
       for (let i = 0; i < projects.projectsList.length; i++) {
         projectsCount++;
         for (let l = 0; l < projects.projectsList[i].tasks.length; l++) {
-          taskCount++;
-          document.querySelector("#todolist").innerHTML += dom.generateTask(i, l);
-          tasks.taskCheck(i, l);
+          tasksArray.push(projects.projectsList[i].tasks[l]);
+          tasksArray[tasksCount].projectIndex = i;
+          tasksArray[tasksCount].taskIndex = l;
+          tasksCount++;
         }
       }
 
-      if (taskCount === 0) {
+      // Check which sort option selected
+      for (let i = 1; i < document.querySelector("#sortBy").options.length; i++) {
+        if (document.querySelector("#sortBy").options[i].selected == true) {
+          sortBy = document.querySelector("#sortBy").options[i].value;
+        }
+      }
+
+      tasksArray = tasks.tasksSort(sortBy, tasksArray);
+
+      dom.renderTasksArray(tasksArray);
+
+      if (tasksCount === 0) {
         document.querySelector("#todolist").innerHTML = dom.noTasks("All projects are empty.");
       }
 
@@ -239,7 +278,7 @@ const dom = (() => {
 
     }
 
-    if (index >= 0) {
+    if (index >= 0) { // RENDER TASKS FROM SELECTED PROJECT ONLY
       document.querySelector("#todos").innerHTML = /*html*/ `
                 <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
                 <div id="footerButton" class="flex flex-row mt-4 gap-2">
@@ -294,65 +333,38 @@ const dom = (() => {
         });
       });
 
+      let tasksArray = [];
+      let tasksCount = 0;
+
+      // Push all tasks to a single object
       if (projects.projectsList[index].tasks.length > 0) {
         for (let i = 0; i < projects.projectsList[index].tasks.length; i++) {
-          document.querySelector("#todolist").innerHTML += dom.generateTask(index, i);
-          tasks.taskCheck(index, i);
+          tasksArray.push(projects.projectsList[index].tasks[i]);
+          tasksArray[tasksCount].projectIndex = index;
+          tasksArray[tasksCount].taskIndex = i;
+          tasksCount++;
         }
-      } else {
+      }
+
+      // Check which sort option selected
+      for (let i = 1; i < document.querySelector("#sortBy").options.length; i++) {
+        if (document.querySelector("#sortBy").options[i].selected == true) {
+          sortBy = document.querySelector("#sortBy").options[i].value;
+        }
+      }
+
+      tasksArray = tasks.tasksSort(sortBy, tasksArray);
+
+      dom.renderTasksArray(tasksArray);
+
+      if (projects.projectsList[index].tasks.length <= 0) {
         document.querySelector("#todolist").innerHTML = dom.noTasks("This project has no tasks.");
       }
-    }
 
-    // Add event listener to all checkmarks on tasks
-    let taskChecks = document.querySelectorAll("#taskCheck").length;
-    for (let i = 0; i < taskChecks; i++) {
-      document
-        .querySelectorAll("#taskCheck")
-      [i].addEventListener("click", (e) => {
-        let checked = projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked;
-        if (checked == true) {
-          projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked = false;
-        } else {
-          projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked = true;
-        }
-        tasks.taskCheck(e.currentTarget.dataset.projectindex, e.currentTarget.dataset.taskindex);
-      });
-    }
+    };
 
-    // Add event listener to all edit buttons on tasks
-    let editButtons = document.querySelectorAll("#editTaskButton").length;
-    for (let i = 0; i < editButtons; i++) {
-      document.querySelectorAll("#editTaskButton")[i].addEventListener("click", (e) => {
-        const taskIndex = e.currentTarget.dataset.taskindex;
-        const projectIndex = e.currentTarget.dataset.projectindex;
-        dom.editTask(taskIndex, projectIndex);
-      });
-    }
+    dom.taskActions();
 
-    // Add event listener to all delete buttons on tasks
-    let deleteButtons = document.querySelectorAll("#todoDelete").length;
-    for (let i = 0; i < deleteButtons; i++) {
-      document.querySelectorAll("#todoDelete")[i].addEventListener("click", (e) => {
-
-        document.querySelector("#popupContent").innerHTML = /*html*/ `
-                      <input type="checkbox" id="popup" class="modal-toggle" />
-                      <label for="popup" class="modal cursor-pointer">
-                          <label class="modal-box relative">
-                              <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                              <span>DELETE THIS TASK?</span>
-                              <div id="deleteTask" class="flex flex-row gap-2 justify-center items-center my-2 max-w-lg">
-                                  <label for="popup" class="btn btn-success" id="deleteTaskNo">NO</label>
-                                  <label for="popup" class="btn btn-error" id="deleteTaskYes" data-projectindex="${e.currentTarget.dataset.projectindex}" data-taskindex="${e.currentTarget.dataset.taskindex}">YES</label>
-                              </div>
-                          </label>
-                      </label>
-                  `;
-        document.querySelector("#deleteTaskYes").addEventListener("click", (e) => {
-          tasks.removeTask(e.currentTarget.dataset.projectindex, e.currentTarget.dataset.taskindex);
-        });
-      });
-    }
   }
 
   function editTask(taskIndex, projectIndex) {
@@ -420,12 +432,66 @@ const dom = (() => {
     });
   }
 
+  function taskActions() {
+    // Add event listener to all checkmarks on tasks
+    let taskChecks = document.querySelectorAll("#taskCheck").length;
+    for (let i = 0; i < taskChecks; i++) {
+      document
+        .querySelectorAll("#taskCheck")
+      [i].addEventListener("click", (e) => {
+        let checked = projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked;
+        if (checked == true) {
+          projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked = false;
+        } else {
+          projects.projectsList[e.currentTarget.dataset.projectindex].tasks[e.currentTarget.dataset.taskindex].checked = true;
+        }
+        tasks.taskCheck(e.currentTarget.dataset.projectindex, e.currentTarget.dataset.taskindex);
+      });
+    }
+
+    // Add event listener to all edit buttons on tasks
+    let editButtons = document.querySelectorAll("#editTaskButton").length;
+    for (let i = 0; i < editButtons; i++) {
+      document.querySelectorAll("#editTaskButton")[i].addEventListener("click", (e) => {
+        const taskIndex = e.currentTarget.dataset.taskindex;
+        const projectIndex = e.currentTarget.dataset.projectindex;
+        dom.editTask(taskIndex, projectIndex);
+      });
+    }
+
+    // Add event listener to all delete buttons on tasks
+    let deleteButtons = document.querySelectorAll("#todoDelete").length;
+    for (let i = 0; i < deleteButtons; i++) {
+      document.querySelectorAll("#todoDelete")[i].addEventListener("click", (e) => {
+
+        document.querySelector("#popupContent").innerHTML = /*html*/ `
+                          <input type="checkbox" id="popup" class="modal-toggle" />
+                          <label for="popup" class="modal cursor-pointer">
+                              <label class="modal-box relative">
+                                  <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                                  <span>DELETE THIS TASK?</span>
+                                  <div id="deleteTask" class="flex flex-row gap-2 justify-center items-center my-2 max-w-lg">
+                                      <label for="popup" class="btn btn-success" id="deleteTaskNo">NO</label>
+                                      <label for="popup" class="btn btn-error" id="deleteTaskYes" data-projectindex="${e.currentTarget.dataset.projectindex}" data-taskindex="${e.currentTarget.dataset.taskindex}">YES</label>
+                                  </div>
+                              </label>
+                          </label>
+                      `;
+        document.querySelector("#deleteTaskYes").addEventListener("click", (e) => {
+          tasks.removeTask(e.currentTarget.dataset.projectindex, e.currentTarget.dataset.taskindex);
+        });
+      });
+    }
+  }
+
   return {
     renderProjects,
     renderTasks,
     editTask,
     generateTask,
     noTasks,
+    renderTasksArray,
+    taskActions,
   };
 })();
 
