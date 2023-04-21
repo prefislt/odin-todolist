@@ -230,7 +230,7 @@ const dom = (() => {
                             <div id="addTask" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
                                 <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name" required>
                                 <input class="input input-bordered w-full" id="inputDescription" type="text" placeholder="Description" required>
-                                <input class="input input-bordered w-full" id="inputDate" type="date" placeholder="Select date" required>
+                                <input class="input input-bordered w-full" id="inputDate" type="date" min="${getDate()}" placeholder="Select date" required>
                                 <select class="select select-bordered w-full" id="inputPriority" required>
                                     <option disabled selected>Priority</option>
                                     <option>Low</option>
@@ -387,7 +387,7 @@ const dom = (() => {
                         <div id="editTaskContent" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
                             <input class="input input-bordered w-full" id="inputTaskNameEdit" type="text" placeholder="Task name" value="${projects.projectsList[projectIndex].tasks[taskIndex].title}">
                             <input class="input input-bordered w-full" id="inputDescriptionEdit" type="text" placeholder="Description" value="${projects.projectsList[projectIndex].tasks[taskIndex].description}">
-                            <input class="input input-bordered w-full" id="inputDateEdit" type="date" placeholder="Select date" value="${projects.projectsList[projectIndex].tasks[taskIndex].date}">
+                            <input class="input input-bordered w-full" id="inputDateEdit" type="date" placeholder="Select date" min="${getDate()}" value="${projects.projectsList[projectIndex].tasks[taskIndex].date}">
                             <select class="select select-bordered w-full" id="inputPriorityEdit">
                                 <option disabled>Priority</option>
                                 <option>Low</option>
@@ -495,6 +495,16 @@ const dom = (() => {
     }
   }
 
+  function getDate() {
+    const date = new Date();
+
+    let day = date.getDate();
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+  }
+
   return {
     renderProjects,
     renderTasks,
@@ -504,6 +514,7 @@ const dom = (() => {
     renderTasksArray,
     taskActions,
     descriptionExpand,
+    getDate,
   };
 })();
 
