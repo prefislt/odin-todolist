@@ -14,14 +14,13 @@ const dom = (() => {
                 </div> 
                 <div class="flex justify-end flex-1 px-2">
                   <div class="flex items-stretch">
-                    <label for="popup" id="addNewTaskButton" class="btn btn-ghost rounded-btn">Add new task</label>
                     <label for="popup" id="addNewProjectButton" class="btn btn-ghost rounded-btn">Add new project</label>
                   </div>
                 </div>
               </div>
             </header>
             <main class="flex flex-grow flex-col w-screen items-center pb-4 px-4">
-              <div id="sortButtons" class="flex flex-row w-full min-w-0 max-w-screen-lg mb-2">
+              <div id="sortButtons" class="flex flex-row w-full min-w-0 max-w-screen-lg mb-4">
                 <select id="sortBy" class="select select-bordered select-xs w-full max-w-xs">
                       <option value="none" selected>No sorting</option>
                       <option value="datefromoldest">Date (from sooner to later)</option>
@@ -64,74 +63,6 @@ const dom = (() => {
     });
   });
 
-  // If "add new task" button is pressed change popup design to this
-  document.querySelector("#addNewTaskButton").addEventListener("click", (e) => {
-    document.querySelector("#popupContent").innerHTML = /*html*/ `
-            <input type="checkbox" id="popup" class="modal-toggle" />
-                <label for="popup" class="modal cursor-pointer">
-                    <label class="modal-box relative">
-                        <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                        <span>ADD NEW TASK</span>
-                        <div id="addTask" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
-                            <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name">
-                            <input class="input input-bordered w-full" id="inputDescription" type="text" placeholder="Description">
-                            <input class="input input-bordered w-full" id="inputDate" type="date" placeholder="Select date">
-                            <select class="select select-bordered w-full" id="inputPriority">
-                                <option disabled selected>Priority</option>
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
-                            </select>
-                            <button class="btn btn-primary" id="submitTask">Add task</button>
-                            <div id="alertArea"></div>
-
-                        </div>
-                    </label> 
-                </label>
-        `;
-
-    document.querySelector("#submitTask").addEventListener("click", () => {
-      const inputTaskName = document.querySelector("#inputTaskName").value;
-      const inputDescription =
-        document.querySelector("#inputDescription").value;
-      const inputDate = document.querySelector("#inputDate").value;
-      const inputPriority = document.querySelector("#inputPriority").value;
-      const projectIndex = document.querySelector("#todolist").dataset.projectindex;
-
-      if (projectIndex < 0 || isNaN(projectIndex)) {
-        document.querySelector("#alertArea").innerHTML = /*html*/`
-          <div class="alert alert-error shadow-lg">
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>Please select a project!</span>
-            </div>
-          </div>
-        `;
-      }
-
-      if (projectIndex >= 0) {
-        tasks.addTask(
-          inputTaskName,
-          inputDescription,
-          inputDate,
-          inputPriority,
-          projectIndex
-        );
-
-        document.querySelector("#alertArea").innerHTML = /*html*/`
-        <div class="alert alert-success shadow-lg">
-          <div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>Your task successfully added!</span>
-          </div>
-        </div>
-        `;
-
-      }
-
-    });
-  });
-
   // If "add new project" button is pressed change popup design to this
   document.querySelector("#addNewProjectButton").addEventListener("click", (e) => {
     document.querySelector("#popupContent").innerHTML = /*html*/ `
@@ -141,7 +72,7 @@ const dom = (() => {
                         <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                         <span>ADD NEW PROJECT</span>
                         <div id="addProject" class="flex flex-col gap-2 justify-center items-center my-2 max-w-lg">
-                            <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name">
+                            <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name" required>
                             <button class="btn btn-primary" id="submitProject">Add project</button>
                         </div>
                     </label>
@@ -195,18 +126,18 @@ const dom = (() => {
               <input id="taskCheck" class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}"/>
           </div>
           <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
-              <span id="todoText" class="font-bold" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].title}</span>
-              <span id="todoDesc" class="text-xs" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].description}</span>
-              <div id="smallInfo">
-                <div id="todoDate" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">📆 ${projects.projectsList[projectIndex].tasks[taskIndex].date}</div>
-                <div id="todoPriority" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">⚠️ ${projects.projectsList[projectIndex].tasks[taskIndex].priority}</div>
-              </div>
+            <span id="todoText" class="font-bold" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].title}</span>
+            <span id="todoDesc" class="text-xs line-clamp-2 cursor-pointer" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].description}</span>
+            <div id="smallInfo">
+              <div id="todoDate" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">📆 ${projects.projectsList[projectIndex].tasks[taskIndex].date}</div>
+              <div id="todoPriority" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">⚠️ ${projects.projectsList[projectIndex].tasks[taskIndex].priority}</div>
+            </div> 
           </div>
           <div id="actionButtons" class="flex flex-row gap-2">
-          <label for="popup" id="editTaskButton" class="btn" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+          <label for="popup" id="editTaskButton" class="btn btn-sm" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g></svg>
           </label>
-          <label for="popup" class="btn" id="todoDelete" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+          <label for="popup" id="todoDelete" class="btn btn-sm" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
           </label>
           </div>
@@ -280,12 +211,81 @@ const dom = (() => {
 
     if (index >= 0) { // RENDER TASKS FROM SELECTED PROJECT ONLY
       document.querySelector("#todos").innerHTML = /*html*/ `
-                <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
-                <div id="footerButton" class="flex flex-row mt-4 gap-2">
-                  <label for="popup" id="editProjectButton" class="btn btn-outline btn-warning" data-projectindex="${index}">Edit project</label>
-                  <label for="popup" id="deleteProjectButton" class="btn btn-outline btn-error" data-projectindex="${index}">Delete project</label>
-                </div>
+        <div id="projectActionButtons" class="flex flex-row mb-4 gap-2">
+          <label for="popup" id="addNewTaskButton" class="btn btn-sm btn-outline btn-warning" data-projectindex="${index}">Add task</label>
+          <label for="popup" id="editProjectButton" class="btn btn-sm btn-outline btn-warning" data-projectindex="${index}">Rename</label>
+          <label for="popup" id="deleteProjectButton" class="btn btn-sm btn-outline btn-error" data-projectindex="${index}">Delete</label>
+        </div>
+        <div id="todolist" class="flex flex-col gap-2 w-full" data-projectindex="${index}"></div>
       `;
+
+      // If "add new task" button is pressed change popup design to this
+      document.querySelector("#addNewTaskButton").addEventListener("click", (e) => {
+        document.querySelector("#popupContent").innerHTML = /*html*/ `
+                <input type="checkbox" id="popup" class="modal-toggle" />
+                    <label for="popup" class="modal cursor-pointer">
+                        <label class="modal-box relative">
+                            <label for="popup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                            <span>ADD NEW TASK</span>
+                            <div id="addTask" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
+                                <input class="input input-bordered w-full" id="inputTaskName" type="text" placeholder="Task name" required>
+                                <input class="input input-bordered w-full" id="inputDescription" type="text" placeholder="Description" required>
+                                <input class="input input-bordered w-full" id="inputDate" type="date" placeholder="Select date" required>
+                                <select class="select select-bordered w-full" id="inputPriority" required>
+                                    <option disabled selected>Priority</option>
+                                    <option>Low</option>
+                                    <option>Medium</option>
+                                    <option>High</option>
+                                </select>
+                                <button class="btn btn-primary" id="submitTask">Add task</button>
+                                <div id="alertArea"></div>
+
+                            </div>
+                        </label> 
+                    </label>
+            `;
+
+        document.querySelector("#submitTask").addEventListener("click", () => {
+          const inputTaskName = document.querySelector("#inputTaskName").value;
+          const inputDescription =
+            document.querySelector("#inputDescription").value;
+          const inputDate = document.querySelector("#inputDate").value;
+          const inputPriority = document.querySelector("#inputPriority").value;
+          const projectIndex = document.querySelector("#todolist").dataset.projectindex;
+
+          if (projectIndex < 0 || isNaN(projectIndex)) {
+            document.querySelector("#alertArea").innerHTML = /*html*/`
+              <div class="alert alert-error shadow-lg">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>Please select a project!</span>
+                </div>
+              </div>
+            `;
+          }
+
+          if (projectIndex >= 0) {
+            tasks.addTask(
+              inputTaskName,
+              inputDescription,
+              inputDate,
+              inputPriority,
+              projectIndex
+            );
+
+            document.querySelector("#alertArea").innerHTML = /*html*/`
+            <div class="alert alert-success shadow-lg">
+              <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span>Your task successfully added!</span>
+              </div>
+            </div>
+            `;
+
+          }
+
+        });
+      });
 
       // If "delete project" button is pressed change popup design to this
       document.querySelector("#deleteProjectButton").addEventListener("click", (e) => {
@@ -364,7 +364,18 @@ const dom = (() => {
     };
 
     dom.taskActions();
+    dom.descriptionExpand();
 
+  }
+
+  function descriptionExpand() {
+    const allDescriptions = document.querySelectorAll("#todoDesc");
+
+    for (let i = 0; i < allDescriptions.length; i++) {
+      allDescriptions[i].addEventListener("click", (e) => {
+        allDescriptions[i].classList.toggle("line-clamp-2");
+      })
+    }
   }
 
   function editTask(taskIndex, projectIndex) {
@@ -492,6 +503,7 @@ const dom = (() => {
     noTasks,
     renderTasksArray,
     taskActions,
+    descriptionExpand,
   };
 })();
 
