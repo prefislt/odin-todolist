@@ -355,6 +355,7 @@ const dom = (() => {
                       <input class="input input-bordered w-full" id="editProjectName" type="text" placeholder="Project name" value="${projects.projectsList[e.currentTarget.dataset.projectindex].title}">
                       <button class="btn btn-primary" id="editProject" data-projectindex="${e.currentTarget.dataset.projectindex}">Confirm</button>
                   </div>
+                  <div id="alertArea"></div>
               </label>
           </label>
         `;
@@ -362,9 +363,30 @@ const dom = (() => {
         document.querySelector("#editProject").addEventListener("click", (e) => {
           const editProjectName = document.querySelector("#editProjectName").value;
           const editProjectIndex = e.currentTarget.dataset.projectindex;
-          projects.editProjectName(editProjectIndex, editProjectName);
-          dom.renderProjects();
-          document.querySelector(`[id="projectButton"][data-index="${document.querySelector('#todolist').dataset.projectindex}"]`).classList.add('underline', 'underline-offset-4');
+
+          if (editProjectName) {
+            document.querySelector("#alertArea").innerHTML = /*html*/`
+              <div class="alert alert-success shadow-lg">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>Your project name successfully changed!</span>
+                </div>
+              </div>
+            `;
+
+            projects.editProjectName(editProjectIndex, editProjectName);
+            dom.renderProjects();
+            document.querySelector(`[id="projectButton"][data-index="${document.querySelector('#todolist').dataset.projectindex}"]`).classList.add('underline', 'underline-offset-4');
+          } else {
+            document.querySelector("#alertArea").innerHTML = /*html*/`
+              <div class="alert alert-error shadow-lg">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>Error! Project name is empty.</span>
+                </div>
+              </div>
+              `;
+          }
         });
       });
 
