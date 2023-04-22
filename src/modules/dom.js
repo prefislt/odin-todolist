@@ -4,6 +4,8 @@ import tasks from "./tasks";
 const dom = (() => {
   const body = document.querySelector("body");
 
+  console.log(projects.projectsList[0].tasks[0].title.length);
+
   document.querySelector("html").setAttribute("data-theme", "halloween");
   body.innerHTML = /*html*/ `
         <div id="content" class="flex flex-col items-center justify-between h-screen w-full">
@@ -36,12 +38,12 @@ const dom = (() => {
                 <div id="todos" class="flex flex-col justify-center"></div>
               </div>
             </main>
-            <footer class="footer items-center p-4 bg-neutral text-neutral-content">
-              <div class="items-center grid-flow-col">
+            <footer class="flex flex-col sm:flex-row gap-2 w-screen justify-between items-center p-4 bg-neutral text-neutral-content">
+              <div class="flex flex-row gap-2 items-center">
                 <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" class="fill-current"><path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path></svg> 
                 <p>To-Do List 🚀 2023</p>
               </div> 
-              <div class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+              <div class="flex flex-row gap-2 items-center">
                 <a href="https://twitter.com/prefislt"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
                 </a> 
                 <a href="https://github.com/prefislt">
@@ -121,25 +123,27 @@ const dom = (() => {
 
   function generateTask(projectIndex, taskIndex) {
     const dom = /*html*/ `
-        <div id="todoTask" class="flex flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
-          <div class="flex justify-center items-center w-6">
-              <input id="taskCheck" class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}"/>
+        <div id="todoTask" class="flex flex-col static sm:flex-row justify-between w-full bg-primary rounded-md p-2" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+          <div class="flex flex-row">
+            <div class="flex justify-center items-center w-6">
+                <input id="taskCheck" class="checkbox checkbox-md border-2 border-slate-900" type="checkbox" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}"/>
+            </div>
+            <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+              <span id="todoText" class="font-bold line-clamp-1 break-all cursor-pointer" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].title}</span>
+              <span id="todoDesc" class="text-xs line-clamp-2 break-words cursor-pointer" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].description}</span>
+              <div id="smallInfo">
+                <div id="todoDate" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">📆 ${projects.projectsList[projectIndex].tasks[taskIndex].date}</div>
+                <div id="todoPriority" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">⚠️ ${projects.projectsList[projectIndex].tasks[taskIndex].priority}</div>
+              </div>
+            </div>
           </div>
-          <div id="todoContent" class="flex flex-col flex-1 mx-2 text-primary-content" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
-            <span id="todoText" class="font-bold" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].title}</span>
-            <span id="todoDesc" class="text-xs line-clamp-2 cursor-pointer" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">${projects.projectsList[projectIndex].tasks[taskIndex].description}</span>
-            <div id="smallInfo">
-              <div id="todoDate" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">📆 ${projects.projectsList[projectIndex].tasks[taskIndex].date}</div>
-              <div id="todoPriority" class="badge badge-sm text-[0.7rem]" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">⚠️ ${projects.projectsList[projectIndex].tasks[taskIndex].priority}</div>
-            </div> 
-          </div>
-          <div id="actionButtons" class="flex flex-row gap-2">
-          <label for="popup" id="editTaskButton" class="btn btn-sm" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g></svg>
-          </label>
-          <label for="popup" id="todoDelete" class="btn btn-sm" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-          </label>
+          <div id="actionButtons" class="flex flex-row justify-center mt-2 sm:mt-0 gap-2">
+            <label for="popup" id="editTaskButton" class="btn btn-sm" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-4 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="edit"> <g> <path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path> <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon> </g> </g> </g> </g></svg>
+            </label>
+            <label for="popup" id="todoDelete" class="btn btn-sm" data-projectindex="${projectIndex}" data-taskindex="${taskIndex}">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 stroke-current"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+            </label>
           </div>
         </div>
     `;
@@ -364,12 +368,19 @@ const dom = (() => {
     };
 
     dom.taskActions();
-    dom.descriptionExpand();
+    dom.taskExpand();
 
   }
 
-  function descriptionExpand() {
+  function taskExpand() {
     const allDescriptions = document.querySelectorAll("#todoDesc");
+    const allTitles = document.querySelectorAll("#todoText");
+
+    for (let i = 0; i < allTitles.length; i++) {
+      allTitles[i].addEventListener("click", (e) => {
+        allTitles[i].classList.toggle("line-clamp-1");
+      })
+    }
 
     for (let i = 0; i < allDescriptions.length; i++) {
       allDescriptions[i].addEventListener("click", (e) => {
@@ -385,7 +396,7 @@ const dom = (() => {
                     <label class="modal-box relative">
                         <span>EDIT TASK</span>
                         <div id="editTaskContent" class="flex flex-col gap-2 justify-center items-center p-4 max-w-lg">
-                            <input class="input input-bordered w-full" id="inputTaskNameEdit" type="text" placeholder="Task name" value="${projects.projectsList[projectIndex].tasks[taskIndex].title}">
+                            <input class="input input-bordered w-full" id="inputTaskNameEdit" type="text" placeholder="Task name" maxlength="64" value="${projects.projectsList[projectIndex].tasks[taskIndex].title}">
                             <input class="input input-bordered w-full" id="inputDescriptionEdit" type="text" placeholder="Description" value="${projects.projectsList[projectIndex].tasks[taskIndex].description}">
                             <input class="input input-bordered w-full" id="inputDateEdit" type="date" placeholder="Select date" min="${getDate()}" value="${projects.projectsList[projectIndex].tasks[taskIndex].date}">
                             <select class="select select-bordered w-full" id="inputPriorityEdit">
@@ -437,6 +448,8 @@ const dom = (() => {
         priority: inputPriority,
         checked: hasChecked,
       };
+
+
 
       projects.saveProjects();
       dom.renderTasks(document.querySelector("#todolist").dataset.projectindex);
@@ -513,7 +526,7 @@ const dom = (() => {
     noTasks,
     renderTasksArray,
     taskActions,
-    descriptionExpand,
+    taskExpand,
     getDate,
   };
 })();
