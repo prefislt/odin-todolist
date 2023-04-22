@@ -4,8 +4,6 @@ import tasks from "./tasks";
 const dom = (() => {
   const body = document.querySelector("body");
 
-  console.log(projects.projectsList[0].tasks[0].title.length);
-
   document.querySelector("html").setAttribute("data-theme", "halloween");
   body.innerHTML = /*html*/ `
         <div id="content" class="flex flex-col items-center justify-between h-screen w-full">
@@ -77,14 +75,36 @@ const dom = (() => {
                             <input class="input input-bordered w-full" id="inputProjectName" type="text" placeholder="Project name" required>
                             <button class="btn btn-primary" id="submitProject">Add project</button>
                         </div>
+                        <div id="alertArea"></div>
                     </label>
                 </label>
             `;
 
     document.querySelector("#submitProject").addEventListener("click", () => {
-      const inputProjectName =
-        document.querySelector("#inputProjectName").value;
-      projects.addProject(inputProjectName);
+      const inputProjectName = document.querySelector("#inputProjectName").value;
+
+      if (inputProjectName) {
+        projects.addProject(inputProjectName);
+
+        document.querySelector("#alertArea").innerHTML = /*html*/`
+          <div class="alert alert-success shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>New project successfully added!</span>
+            </div>
+          </div>
+          `;
+      } else {
+        document.querySelector("#alertArea").innerHTML = /*html*/`
+          <div class="alert alert-error shadow-lg">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>Error! Project name is empty.</span>
+            </div>
+          </div>
+          `;
+      }
+
     });
   });
 
@@ -269,22 +289,33 @@ const dom = (() => {
           }
 
           if (projectIndex >= 0) {
-            tasks.addTask(
-              inputTaskName,
-              inputDescription,
-              inputDate,
-              inputPriority,
-              projectIndex
-            );
 
-            document.querySelector("#alertArea").innerHTML = /*html*/`
-            <div class="alert alert-success shadow-lg">
-              <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <span>Your task successfully added!</span>
+            if (tasks.checkInput(inputTaskName, inputDescription, inputDate, inputPriority) == "empty") {
+              document.querySelector("#alertArea").innerHTML = /*html*/`
+                <div class="alert alert-error shadow-lg">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>Error! Please do not leave empty spaces.</span>
+                    </div>
+                </div>
+              `;
+            } else {
+              tasks.addTask(
+                inputTaskName,
+                inputDescription,
+                inputDate,
+                inputPriority,
+                projectIndex
+              );
+              document.querySelector("#alertArea").innerHTML = /*html*/`
+              <div class="alert alert-success shadow-lg">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>Your task successfully added!</span>
+                </div>
               </div>
-            </div>
-            `;
+              `;
+            }
 
           }
 
@@ -406,12 +437,7 @@ const dom = (() => {
                                 <option>High</option>
                             </select>
                             <button class="btn btn-primary" id="submitTaskEdit">Edit task</button>
-                            <div class="alert alert-error shadow-lg">
-                                <div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                    <span>Error! Just example, for now it's doing nothing. So don't worry :)</span>
-                                </div>
-                            </div>
+                            <div id="alertArea"></div>
                         </div>
                     </label> 
                 </label>
@@ -440,19 +466,36 @@ const dom = (() => {
       const inputPriority = document.querySelector("#inputPriorityEdit").value;
       const hasChecked = document.querySelector(`[id="taskCheck"][data-projectindex="${projectIndex}"][data-taskindex="${taskIndex}"]`).hasAttribute("checked");
 
+      if (tasks.checkInput(inputTaskName, inputDescription, inputDate, inputPriority) == "empty") {
+        document.querySelector("#alertArea").innerHTML = /*html*/`
+          <div class="alert alert-error shadow-lg">
+              <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span>Error! Please do not leave empty spaces.</span>
+              </div>
+          </div>
+        `;
+      } else {
+        projects.projectsList[projectIndex].tasks[taskIndex] = {
+          title: inputTaskName,
+          description: inputDescription,
+          date: inputDate,
+          priority: inputPriority,
+          checked: hasChecked,
+        };
 
-      projects.projectsList[projectIndex].tasks[taskIndex] = {
-        title: inputTaskName,
-        description: inputDescription,
-        date: inputDate,
-        priority: inputPriority,
-        checked: hasChecked,
-      };
+        projects.saveProjects();
+        dom.renderTasks(document.querySelector("#todolist").dataset.projectindex);
 
-
-
-      projects.saveProjects();
-      dom.renderTasks(document.querySelector("#todolist").dataset.projectindex);
+        document.querySelector("#alertArea").innerHTML = /*html*/`
+        <div class="alert alert-success shadow-lg">
+          <div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <span>Your task successfully edited!</span>
+          </div>
+        </div>
+        `;
+      }
     });
   }
 

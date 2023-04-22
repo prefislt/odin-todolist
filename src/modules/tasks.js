@@ -102,11 +102,18 @@ const tasks = (() => {
     return tasks;
   }
 
+  function checkInput(name, description, date, priority) {
+    if (!name || !description || !date || priority == "Priority") {
+      return "empty";
+    }
+  }
+
   return {
     addTask,
     removeTask,
     taskCheck,
     tasksSort,
+    checkInput,
   };
 })();
 
